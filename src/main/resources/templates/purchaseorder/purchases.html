@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/base}">
+<head>
+    <title>Commandes Fournisseur</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="content-container">
+            <div class="page-header">
+                <h2>Commandes au fournisseur <span th:text="${supplierName}" class="text-primary-600"></span></h2>
+                <div class="header-actions">
+                    <a th:href="@{/suppliers}" class="btn btn-secondary">
+                        Retour aux fournisseurs
+                    </a>
+                </div>
+            </div>
+
+            <div class="card table-card">
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>Statut</th>
+                            <th>Date de transaction</th>
+                            <th>Montant</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="purchase : ${purchases}">
+                            <td>
+                                <span th:text="${purchase.status}"></span>
+                            </td>
+                            <td th:text="${purchase.transaction_date}"></td>
+                            <td th:text="${#numbers.formatDecimal(purchase.grand_total, 1, 2)} + ' $'"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

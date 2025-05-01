@@ -1,39 +1,87 @@
 package org.example.erpspring.service;
 
-
-import org.example.erpspring.model.FrappeResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-
-import java.util.List;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Service
 public class FrappeService {
-    @Autowired
-    private RestTemplate restTemplate;
-    private final String API_KEY = "your_api_key";
-    private final String API_SECRET = "your_api_secret";
-    private final String BASE_URL = "http://erpnext.localhost:8000/api";
-    public List<Map<String,Object>> getAllEmployees(){
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "token " + "80d965d9662eb50" + ":" + "53ea0bae5ec88c7");
+    private final RestTemplate restTemplate;
+    private final String apiUrl;
+    private final String apiKey;
 
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<FrappeResponse> response = restTemplate.exchange(
-                BASE_URL + "/resource/Olona?fields=[\"nom\", \"age\"]",
+    public FrappeService(
+            RestTemplate restTemplate,
+            @Value("${erpnext.api.url}") String apiUrl,
+            @Value("${erpnext.api.key}") String apiKey) {
+        this.restTemplate = restTemplate;
+        this.apiUrl = apiUrl;
+        this.apiKey = apiKey;
+    }
+    public ResponseEntity<Map> get(String endpoint, Map<String, String> params) {
+        HttpEntity<String> entity = new HttpEntity<>(createHeaders());
+        return restTemplate.exchange(
+                buildUrl(endpoint, params),
                 HttpMethod.GET,
                 entity,
-                FrappeResponse.class
+                Map.class
         );
-        return response.getBody().getData();
     }
 
+    public ResponseEntity<Map> send(String endpoint, Object body, HttpMethod method) {
+        HttpEntity<Object> entity = new HttpEntity<>(body, createHeaders());
+        return restTemplate.exchange(
+                apiUrl + endpoint,
+                method,
+                entity,
+                Map.class
+        );
+    }
+
+    private HttpHeaders createHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "token " + apiKey);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return headers;
+    }
+
+    private String buildUrl(String endpoint, Map<String, String> params) {
+        StringBuilder url = new StringBuilder(apiUrl + endpoint);
+
+        if (params != null && !params.isEmpty()) {
+            url.append("?");
+            params.forEach((key, value) -> {
+                try {
+                    String encodedKey = URLEncoder.encode(key, StandardCharsets.UTF_8.name());
+                    String encodedValue = value;
+                    if (!isAlreadyEncoded(value)) {
+                        encodedValue = URLEncoder.encode(value, StandardCharsets.UTF_8.name());
+                    }
+                    url.append(encodedKey).append("=").append(encodedValue).append("&");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            });
+            url.setLength(url.length() - 1);
+        }
+        return url.toString();
+    }
+
+    private boolean isAlreadyEncoded(String value) {
+        try {
+            String decoded = URLDecoder.decode(value, StandardCharsets.UTF_8.name());
+            return decoded.equals(value);
+        } catch (UnsupportedEncodingException e) {
+            // Gérer l'exception si nécessaire
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

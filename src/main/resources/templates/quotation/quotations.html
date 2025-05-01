@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/base}">
+<head>
+    <title>Devis Fournisseur</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="content-container">
+        <div class="page-header">
+            <h2>Devis pour le fournisseur <span th:text="${supplierName}" class="text-primary-600"></span></h2>
+            <div class="header-actions">
+                <a th:href="@{/suppliers}" class="btn btn-secondary">
+                    Retour aux fournisseurs
+                </a>
+            </div>
+        </div>
+
+        <div class="card table-card">
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>Référence</th>
+                        <th>Statut</th>
+                        <th>Validité</th>
+                        <th>Montant</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="quotation : ${quotations}">
+                        <td th:text="${quotation.name}"></td>
+                        <td>
+                                    <span th:text="${quotation.status}"
+                                          th:class="${quotation.status == 'Accepted'} ? 'badge bg-success-500' : 'badge bg-warning-500'">
+                                    </span>
+                        </td>
+                        <td th:text="${quotation.valid_till}"></td>
+                        <td th:text="${#numbers.formatDecimal(quotation.grand_total, 1, 2)} + ' €'"></td>
+                        <td class="actions-cell"><a th:href="@{/quotations/item(name=${quotation.name})}"><i class="fas fa-file-invoice"></i>List items</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
