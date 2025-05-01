@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/base}">
+<head>
+    <title>Liste des Fournisseurs</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="content-container">
+        <div class="page-header">
+            <h2>Fournisseurs</h2>
+        </div>
+
+        <div class="card table-card">
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Type</th>
+                        <th>Pays</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="supplier : ${suppliers}">
+                        <td th:text="${supplier.name}"></td>
+                        <td th:text="${supplier.supplier_name}"></td>
+                        <td>
+                            <span class="badge" th:text="${supplier.supplier_type}"></span>
+                        </td>
+                        <td th:text="${supplier.country}"></td>
+                        <td class="actions-cell">
+                            <a th:href="@{/quotations/{id}(id=${supplier.name})}"
+                               class="btn btn-icon btn-secondary">
+                                Devis
+                            </a>
+                            <a th:href="@{/purchaseorders/{id}(id=${supplier.name})}"
+                               class="btn btn-icon btn-secondary">
+                                Commandes
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/base}">
+<head>
+    <title>Modification de prix</title>
+</head>
+<body>
+<div layout:fragment="content">
+        <div class="insert-form-container">
+            <div class="insert-section">
+                <h2>Update item</h2>
+                <form class="insert-form" method="POST" th:action="@{/quotationItems/update}" >
+                    <div class="form-group1">
+                        <label for="nom-medicament">Prix :</label>
+                        <input type="number" id="nom-medicament" name="prix" th:value="${rate}">
+                    </div>
+                    <div class="form-group1">
+                        <input type="hidden" id="date" name="name"  th:value="${name}">
+                    </div>
+                    <button type="submit">Update</button>
+                </form>
+            </div>
+        </div>
+</div>
+
+
+</body>
+</html>

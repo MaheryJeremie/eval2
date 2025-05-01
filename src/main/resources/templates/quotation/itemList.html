@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/base}">
+<head>
+    <title>Listes des produits par devis</title>
+</head>
+<div layout:fragment="content">
+    <div class="content-container">
+        <div class="page-header">
+            <h2>Quotation's products</h2>
+            <div class="header-actions">
+                <a th:href="@{/suppliers}" class="btn btn-secondary">
+                    Retour aux fournisseurs
+                </a>
+            </div>
+        </div>
+        <div class="card table-card">
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>item_name</th>
+                        <th>qty</th>
+                        <th>rate</th>
+                        <th>amount</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="quotation : ${quotations}">
+                        <td th:text="${quotation.name}"></td>
+                        <td th:text="${quotation.item_name}"></td>
+                        <td th:text="${quotation.qty}"></td>
+                        <td th:text="${#numbers.formatDecimal(quotation.rate, 1, 2)} + ' €'"></td>
+                        <td th:text="${#numbers.formatDecimal(quotation.amount, 1, 2)} + ' €'"></td>
+                        <td>
+                            <a th:href="@{/quotationItems/update(name=${quotation.name}, rate=${quotation.rate})}">
+                                <i class="fas fa-file-invoice"></i>Update
+                            </a>
+                        </td>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    </div>
+</body>
+</html>
