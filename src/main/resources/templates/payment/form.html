@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/base}">
 <head>
-    <title>Modification de prix - ERP System</title>
+    <title>Formulaire de paiement - ERP System</title>
     <style>
         :root {
             /* Color System */
@@ -45,26 +45,17 @@
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
-        .insert-form-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: calc(100vh - 64px);
+        [layout\:fragment="content"] {
+            max-width: 600px;
+            margin: 2rem auto;
             padding: 2rem;
-            background-color: var(--secondary-50);
-        }
-
-        .insert-section {
             background-color: white;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-md);
-            padding: 2rem;
-            width: 100%;
-            max-width: 500px;
             border: 1px solid var(--secondary-200);
         }
 
-        .insert-section h2 {
+        h2 {
             color: var(--secondary-900);
             font-weight: 700;
             font-size: 1.5rem;
@@ -72,25 +63,25 @@
             text-align: center;
         }
 
-        .insert-form {
+        form {
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
         }
 
-        .form-group1 {
+        .form-group {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
         }
 
-        .form-group1 label {
+        label {
             color: var(--secondary-700);
             font-weight: 500;
             font-size: 0.875rem;
         }
 
-        .form-group1 input {
+        input, select {
             padding: 0.75rem 1rem;
             border: 1px solid var(--secondary-300);
             border-radius: var(--radius-md);
@@ -100,11 +91,20 @@
             transition: all 0.2s ease;
         }
 
-        .form-group1 input:focus {
+        input[readonly] {
+            background-color: var(--secondary-100);
+            color: var(--secondary-600);
+        }
+
+        input:focus, select:focus {
             outline: none;
             border-color: var(--primary-500);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
             background-color: white;
+        }
+
+        select option {
+            padding: 0.5rem;
         }
 
         button[type="submit"] {
@@ -117,8 +117,12 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
-            margin-top: 0.5rem;
+            margin-top: 1rem;
             width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
         button[type="submit"]:hover {
@@ -132,42 +136,48 @@
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            .insert-form-container {
-                padding: 1rem;
-            }
-
-            .insert-section {
+            [layout\:fragment="content"] {
+                margin: 1rem;
                 padding: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-<div layout:fragment="content">
-    <div class="insert-form-container">
-        <div class="insert-section">
-            <h2>Modifier le prix</h2>
-            <form class="insert-form" method="POST" th:action="@{/quotationItems/update}">
-                <div class="form-group1">
-                    <label for="nom-medicament">Nouveau prix :</label>
-                    <input type="number"
-                           id="nom-medicament"
-                           name="prix"
-                           th:value="${rate}"
-                           step="0.01"
-                           min="0"
-                           required>
-                </div>
-                <div class="form-group1">
-                    <input type="hidden" id="date" name="name" th:value="${name}">
-                </div>
-                <button type="submit">
-                    <i data-lucide="save"></i> Mettre à jour
-                </button>
-            </form>
+<section layout:fragment="content">
+    <h2 th:text="'Paiement de la facture ' + ${invoiceId} + ' associée à la commande ' + ${purchaseOrder}"></h2>
+
+    <form th:action="@{/payment}" method="post">
+        <div class="form-group">
+            <label for="supplier">Fournisseur :</label>
+            <input type="text" id="supplier" name="supplier" th:value="${supplier}" readonly />
         </div>
-    </div>
-</div>
+
+        <div class="form-group">
+            <label for="amount">Montant à payer :</label>
+            <input type="text" id="amount" name="amount" th:value="${amount}" readonly />
+        </div>
+
+        <div class="form-group">
+            <label for="mode_of_payment">Mode de paiement :</label>
+            <select id="mode_of_payment" name="mode_of_payment" required>
+                <option value="" hidden="">-- Sélectionner --</option>
+                <option th:each="mode : ${paiementModes}"
+                        th:value="${mode.name}"
+                        th:text="${mode.name}">
+                </option>
+            </select>
+        </div>
+
+        <input type="hidden" name="invoiceId" th:value="${invoiceId}" />
+
+        <div>
+            <button type="submit">
+                <i data-lucide="check-circle"></i> Valider le paiement
+            </button>
+        </div>
+    </form>
+</section>
 
 <script>
     // Initialiser les icônes Lucide
