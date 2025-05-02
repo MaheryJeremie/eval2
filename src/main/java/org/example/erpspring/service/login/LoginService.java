@@ -46,8 +46,8 @@ public class LoginService {
     }
 
     public void logout() {
-        String endpoint = "/api/method/logout";
-        apiService.send(endpoint, null, HttpMethod.GET);
+        String endpoint = "/method/logout";
+        apiService.send(endpoint, null, HttpMethod.POST);
         session.removeAttribute("sid");
     }
 }

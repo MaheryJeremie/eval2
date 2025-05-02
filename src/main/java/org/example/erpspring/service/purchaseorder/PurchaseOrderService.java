@@ -21,7 +21,7 @@ public class PurchaseOrderService {
         var response = apiService.get(
                 ORDER_ENDPOINT,
                 Map.of(
-                        "fields", "[\"status\", \"transaction_date\", \"grand_total\"]",
+                        "fields", "[\"name\",\"status\", \"transaction_date\", \"grand_total\"]",
                         "filters", "[[\"supplier\", \"=\", \"" + supplierId + "\"]]"
                 )
         );

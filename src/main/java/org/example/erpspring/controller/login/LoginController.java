@@ -34,4 +34,9 @@ public class LoginController {
             return "login/index";
         }
     }
+    @GetMapping("/logout")
+    public String logout(){
+        loginService.logout();
+        return "login/index";
+    }
 }

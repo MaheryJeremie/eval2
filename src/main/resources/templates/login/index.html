@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion - ERP System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ERP Next Modern Theme - Main CSS File
- * A modern, professional CSS theme for ERP applications
- */
-
         :root {
             /* Color System */
             --primary-50: #eff6ff;
@@ -34,40 +32,13 @@
             --secondary-800: #1e293b;
             --secondary-900: #0f172a;
 
-            --accent-50: #ecfdf5;
-            --accent-100: #d1fae5;
-            --accent-200: #a7f3d0;
-            --accent-300: #6ee7b7;
-            --accent-400: #34d399;
-            --accent-500: #10b981;
-            --accent-600: #059669;
-            --accent-700: #047857;
-            --accent-800: #065f46;
-            --accent-900: #064e3b;
-
             --success-500: #22c55e;
             --warning-500: #f59e0b;
             --error-500: #ef4444;
 
-            /* Typography */
-            --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-
-            /* Spacing Scale (8px system) */
-            --space-1: 0.25rem; /* 4px */
-            --space-2: 0.5rem;  /* 8px */
-            --space-3: 0.75rem; /* 12px */
-            --space-4: 1rem;    /* 16px */
-            --space-5: 1.25rem; /* 20px */
-            --space-6: 1.5rem;  /* 24px */
-            --space-8: 2rem;    /* 32px */
-            --space-10: 2.5rem; /* 40px */
-            --space-12: 3rem;   /* 48px */
-            --space-16: 4rem;   /* 64px */
-
-            /* Shadows */
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            /* Layout */
+            --sidebar-width: 280px;
+            --sidebar-collapsed-width: 80px;
 
             /* Border radius */
             --radius-sm: 0.25rem;
@@ -75,14 +46,17 @@
             --radius-lg: 0.5rem;
             --radius-xl: 0.75rem;
 
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
             /* Animation */
             --transition-fast: 150ms;
             --transition-normal: 250ms;
             --transition-slow: 350ms;
-            --easing: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Base styles */
         * {
             margin: 0;
             padding: 0;
@@ -90,34 +64,27 @@
         }
 
         body {
-            font-family: var(--font-family);
-            font-size: 16px;
-            line-height: 1.5;
-            color: var(--secondary-800);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background: linear-gradient(135deg, var(--secondary-50) 0%, var(--secondary-100) 100%);
+            color: var(--secondary-800);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        /* Login styles */
-        .container {
-            width: 100%;
-            padding: var(--space-4);
+            padding: 1rem;
         }
 
         .login-container {
-            background-color: white;
+            background: white;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-lg);
-            padding: var(--space-8);
-            max-width: 450px;
+            padding: 2.5rem;
             width: 100%;
-            margin: 0 auto;
+            max-width: 450px;
             position: relative;
             overflow: hidden;
             border: 1px solid var(--secondary-200);
+            animation: fadeIn var(--transition-normal) ease-out;
         }
 
         .login-container::before {
@@ -127,22 +94,26 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary-600) 0%, var(--accent-500) 100%);
+            background: linear-gradient(90deg, var(--primary-600) 0%, var(--primary-400) 100%);
         }
 
-        .login-container h2 {
+        .login-branding {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-branding h2 {
             color: var(--secondary-900);
             font-weight: 700;
             font-size: 1.75rem;
-            margin-bottom: var(--space-6);
-            text-align: center;
         }
 
         .alert {
-            padding: var(--space-3) var(--space-4);
+            padding: 0.75rem 1rem;
             border-radius: var(--radius-md);
-            margin-bottom: var(--space-4);
+            margin-bottom: 1.5rem;
             font-weight: 500;
+            font-size: 0.875rem;
         }
 
         .alert-danger {
@@ -157,9 +128,13 @@
             border: 1px solid rgba(34, 197, 94, 0.3);
         }
 
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
         .form-label {
             display: block;
-            margin-bottom: var(--space-2);
+            margin-bottom: 0.5rem;
             color: var(--secondary-700);
             font-weight: 500;
             font-size: 0.875rem;
@@ -168,7 +143,7 @@
         .form-control {
             display: block;
             width: 100%;
-            padding: var(--space-3) var(--space-4);
+            padding: 0.75rem 1rem;
             font-size: 1rem;
             font-weight: 400;
             line-height: 1.5;
@@ -177,8 +152,8 @@
             background-clip: padding-box;
             border: 1px solid var(--secondary-300);
             border-radius: var(--radius-md);
-            transition: border-color var(--transition-normal) var(--easing),
-            box-shadow var(--transition-normal) var(--easing);
+            transition: border-color var(--transition-normal),
+            box-shadow var(--transition-normal);
         }
 
         .form-control:focus {
@@ -190,14 +165,7 @@
 
         .form-control::placeholder {
             color: var(--secondary-400);
-        }
-
-        .mb-3 {
-            margin-bottom: var(--space-4);
-        }
-
-        .mb-4 {
-            margin-bottom: var(--space-5);
+            opacity: 1;
         }
 
         .btn {
@@ -208,15 +176,11 @@
             vertical-align: middle;
             user-select: none;
             border: 1px solid transparent;
-            padding: var(--space-3) var(--space-6);
+            padding: 0.75rem 1.5rem;
             font-size: 1rem;
             line-height: 1.5;
             border-radius: var(--radius-md);
-            transition: color var(--transition-normal) var(--easing),
-            background-color var(--transition-normal) var(--easing),
-            border-color var(--transition-normal) var(--easing),
-            box-shadow var(--transition-normal) var(--easing),
-            transform var(--transition-fast) var(--easing);
+            transition: all var(--transition-normal);
             cursor: pointer;
         }
 
@@ -243,13 +207,6 @@
             width: 100%;
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 576px) {
-            .login-container {
-                padding: var(--space-6);
-            }
-        }
-
         /* Animation */
         @keyframes fadeIn {
             from {
@@ -262,90 +219,36 @@
             }
         }
 
-        .login-container {
-            animation: fadeIn var(--transition-normal) var(--easing);
-        }
-
-        .login-container form {
-            animation: fadeIn var(--transition-slow) var(--easing);
-            animation-delay: 100ms;
-            animation-fill-mode: both;
-        }
-
-        /* Logo or branding area */
-        .login-branding {
-            text-align: center;
-            margin-bottom: var(--space-6);
-        }
-
-        .login-branding img {
-            max-height: 48px;
-            width: auto;
-        }
-
-        /* Optional: add a remember me checkbox */
-        .form-check {
-            display: flex;
-            align-items: center;
-            margin-bottom: var(--space-4);
-        }
-
-        .form-check-input {
-            margin-right: var(--space-2);
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-        }
-
-        .form-check-label {
-            font-size: 0.875rem;
-            color: var(--secondary-600);
-            cursor: pointer;
-        }
-
-        /* Optional: forgot password link */
-        .forgot-password {
-            display: block;
-            text-align: right;
-            font-size: 0.875rem;
-            color: var(--primary-600);
-            text-decoration: none;
-            margin-bottom: var(--space-4);
-        }
-
-        .forgot-password:hover {
-            color: var(--primary-800);
-            text-decoration: underline;
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            .login-container {
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="login-container">
-        <div class="login-branding">
-            <!-- You can add your logo here -->
-            <h2>ERP System</h2>
+<div class="login-container">
+    <div class="login-branding">
+        <h2>ERP System</h2>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+
+    <form th:action="@{/login}" method="post">
+        <div class="form-group">
+            <label for="username" class="form-label">Nom d'utilisateur</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Entrez votre nom d'utilisateur" required>
         </div>
 
-        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+        <div class="form-group">
+            <label for="password" class="form-label">Mot de passe</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Entrez votre mot de passe" required>
+        </div>
 
-        <form th:action="@{/login}" method="post">
-            <div class="mb-3">
-                <label for="username" class="form-label">Nom d'utilisateur</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Entrez votre nom d'utilisateur" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="password" class="form-label">Mot de passe</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Entrez votre mot de passe" required>
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100">Se connecter</button>
-        </form>
-    </div>
+        <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+    </form>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
