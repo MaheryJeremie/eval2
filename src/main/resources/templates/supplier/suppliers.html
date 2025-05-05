@@ -157,6 +157,51 @@
             background-color: var(--secondary-200);
             color: var(--secondary-800);
         }
+        .search-form {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .status-filter {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--secondary-300);
+            border-radius: var(--radius-md);
+            background-color: white;
+            font-size: 0.875rem;
+            color: var(--secondary-700);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .status-filter:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .search-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--radius-md);
+            background-color: var(--primary-600);
+            color: white;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-btn:hover {
+            background-color: var(--primary-700);
+        }
+
+        .search-btn i {
+            width: 16px;
+            height: 16px;
+        }
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -181,6 +226,13 @@
     <div class="content-container">
         <div class="page-header">
             <h2>Fournisseurs</h2>
+            <form th:action="@{/suppliers/name}" method="get" class="search-form">
+                <label for="name">Nom : </label>
+                <input type="text" name="name" id="name">
+                <button type="submit" class="search-btn">
+                    <i data-lucide="search"></i> Filtrer
+                </button>
+            </form>
         </div>
 
         <div class="card table-card">

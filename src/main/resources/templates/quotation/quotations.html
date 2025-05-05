@@ -265,9 +265,9 @@
                             </span>
                         </td>
                         <td th:text="${quotation.valid_till}"></td>
-                        <td th:text="${#numbers.formatDecimal(quotation.grand_total, 1, 2)} + ' €'"></td>
+                        <td th:text="${#numbers.formatDecimal(quotation.grand_total, 1, 'POINT', 2, 'COMMA')} + ' $'"></td>
                         <td class="actions-cell">
-                            <a th:href="@{/quotations/item(name=${quotation.name})}" class="action-link">
+                            <a th:href="@{/quotations/item(name=${quotation.name},editable=${quotation.status != 'Submitted'})}" class="action-link">
                                 <i data-lucide="file-text"></i> Détails
                             </a>
                         </td>

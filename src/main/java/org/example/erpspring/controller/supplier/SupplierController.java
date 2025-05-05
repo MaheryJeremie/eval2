@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/suppliers")
@@ -17,6 +18,11 @@ public class SupplierController {
     @GetMapping
     public String getSuppliers(Model model) {
         model.addAttribute("suppliers", supplierService.getAllSuppliers());
+        return "supplier/suppliers";
+    }
+    @GetMapping("/name")
+    public String getSuppliersByName(@RequestParam String name,Model model) {
+        model.addAttribute("suppliers", supplierService.getAllSuppliersByName(name));
         return "supplier/suppliers";
     }
 }
