@@ -22,7 +22,15 @@ public class PurchaseInvoiceController {
 
     @GetMapping
     public String getInvoiceList(Model model){
-        model.addAttribute("invoices",purchaseInvoiceServiceService.getSupplierInvoices());
+        model.addAttribute("invoices",purchaseInvoiceServiceService.getAllInvoices());
+        model.addAttribute("statuses",purchaseInvoiceServiceService.getDistinctStatuses());
+        return "invoice/list";
+    }
+    @GetMapping("/status")
+    public String getInvoiceListByStatus(Model model,@RequestParam String status){
+        model.addAttribute("invoices",purchaseInvoiceServiceService.getAllInvoicesByStatus(status));
+        model.addAttribute("selectedStatus",status);
+        model.addAttribute("statuses",purchaseInvoiceServiceService.getDistinctStatuses());
         return "invoice/list";
     }
     @GetMapping("/form")

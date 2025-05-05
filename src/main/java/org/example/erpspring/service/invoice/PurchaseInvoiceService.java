@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 
@@ -14,13 +16,30 @@ public class PurchaseInvoiceService {
     public PurchaseInvoiceService(FrappeService apiService) {
         this.apiService = apiService;
     }
-    public List<Map<String, Object>> getSupplierInvoices() {
+    public List<Map<String, Object>> getAllInvoices() {
         var response = apiService.get(
                 INVOICE_ENDPOINT,
                 Map.of(
-                        "fields", "[\"name\", \"due_date\", \"outstanding_amount\", \"status\", \"supplier\", \"items.purchase_order\"]"
+                        "fields", "[\"name\", \"due_date\",\"total\",\"outstanding_amount\", \"status\", \"supplier\", \"items.purchase_order\"]"
                 )
         );
         return (List<Map<String, Object>>) response.getBody().get("data");
+    }
+    public List<Map<String, Object>> getAllInvoicesByStatus(String status) {
+        if (status.equals("all")) return getAllInvoices();
+        var response = apiService.get(
+                INVOICE_ENDPOINT,
+                Map.of(
+                        "fields", "[\"name\", \"due_date\", \"outstanding_amount\", \"status\", \"supplier\", \"items.purchase_order\"]",
+                        "filters", String.format("[[\"status\", \"=\", \"%s\"]]", status)
+                )
+        );
+        return (List<Map<String, Object>>) response.getBody().get("data");
+    }
+    public Set<String> getDistinctStatuses() {
+        List<Map<String, Object>> invoices = getAllInvoices();
+        return invoices.stream()
+                .map(invoice -> (String) invoice.get("status"))
+                .collect(Collectors.toSet());
     }
 }

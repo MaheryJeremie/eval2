@@ -58,7 +58,12 @@
         }
 
         .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .page-header h2 {
@@ -66,6 +71,52 @@
             font-weight: 700;
             font-size: 1.5rem;
             margin: 0;
+        }
+
+        .search-form {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .status-filter {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--secondary-300);
+            border-radius: var(--radius-md);
+            background-color: white;
+            font-size: 0.875rem;
+            color: var(--secondary-700);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .status-filter:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .search-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--radius-md);
+            background-color: var(--primary-600);
+            color: white;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-btn:hover {
+            background-color: var(--primary-700);
+        }
+
+        .search-btn i {
+            width: 16px;
+            height: 16px;
         }
 
         .card {
@@ -170,11 +221,27 @@
             width: 16px;
             height: 16px;
         }
+        .paid-text {
+            opacity: 0.7; /* Légèrement plus clair pour indiquer que c'est inactif */
+        }
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .content-container {
                 padding: 1rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search-form {
+                width: 100%;
+            }
+
+            .status-filter {
+                flex: 1;
             }
 
             .table-card {
@@ -198,6 +265,20 @@
     <div class="content-container">
         <div class="page-header">
             <h2>Factures fournisseurs</h2>
+
+            <form th:action="@{/purchaseInvoice/status}" method="get" class="search-form">
+                <select name="status" class="status-filter">
+                    <option value="all">Tous les statuts</option>
+                    <option th:each="status : ${statuses}"
+                            th:value="${status}"
+                            th:text="${status}"
+                            th:selected="${selectedStatus != null && selectedStatus == status}">
+                    </option>
+                </select>
+                <button type="submit" class="search-btn">
+                    <i data-lucide="search"></i> Filtrer
+                </button>
+            </form>
         </div>
 
         <div class="card table-card">
@@ -207,6 +288,7 @@
                     <tr>
                         <th>Référence</th>
                         <th>Date d'échéance</th>
+                        <th>Montant total</th>
                         <th>Montant dû</th>
                         <th>Statut</th>
                         <th>Fournisseur</th>
@@ -218,17 +300,24 @@
                     <tr th:each="invoice : ${invoices}">
                         <td th:text="${invoice.name}"></td>
                         <td th:text="${invoice.due_date}"></td>
-                        <td th:text="${#numbers.formatDecimal(invoice.outstanding_amount, 1, 2)} + ' €'"></td>
+                        <td th:text="${#numbers.formatDecimal(invoice.total, 1, 'POINT', 3, 'COMMA')} + ' $'"></td>
+                        <td th:text="${#numbers.formatDecimal(invoice.outstanding_amount, 1, 'POINT', 2, 'COMMA')} + ' $'"></td>
                         <td>
-                            <span th:text="${invoice.status}"</span>
+                            <span th:text="${invoice.status}"
+                                  th:classappend="${(invoice.status == 'Paid') ? 'status-paid badge' : (invoice.status == 'Partly Paid') ? 'status-partly-paid badge' : 'status-unpaid badge'}">
+                            </span>
                         </td>
                         <td th:text="${invoice.supplier}"></td>
                         <td th:text="${invoice.purchase_order}"></td>
                         <td class="actions-cell">
-                            <a th:href="@{/purchaseInvoice/form(name=${invoice.name}, supplier=${invoice.supplier}, amount=${invoice.outstanding_amount}, purchaseOrder=${invoice.purchase_order})}"
+                            <a th:if="${invoice.status != 'Paid'}"
+                               th:href="@{/purchaseInvoice/form(name=${invoice.name}, supplier=${invoice.supplier}, amount=${invoice.outstanding_amount}, purchaseOrder=${invoice.purchase_order})}"
                                class="action-link">
-                                <i data-lucide="dollar-sign"></i> Payer
+                                Payer
                             </a>
+                            <span th:if="${invoice.status == 'Paid'}" class="action-link paid-text">
+                                Payé
+                            </span>
                         </td>
                     </tr>
                     </tbody>
