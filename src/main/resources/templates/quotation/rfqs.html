@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/base}">
 <head>
-    <title>Liste des Fournisseurs - ERP System</title>
+    <title>Devis Fournisseur - ERP System</title>
     <style>
         :root {
             /* Color System */
@@ -30,8 +30,11 @@
             --secondary-900: #0f172a;
 
             --success-500: #22c55e;
+            --success-100: #dcfce7;
             --warning-500: #f59e0b;
+            --warning-100: #fef3c7;
             --error-500: #ef4444;
+            --error-100: #fee2e2;
 
             /* Border radius */
             --radius-sm: 0.25rem;
@@ -57,12 +60,24 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .page-header h2 {
             color: var(--secondary-900);
             font-weight: 700;
             font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .text-primary-600 {
+            color: var(--primary-600);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
         }
 
         .card {
@@ -75,6 +90,10 @@
 
         .table-card {
             padding: 1.5rem;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
         }
 
         .data-table {
@@ -96,7 +115,6 @@
             text-transform: uppercase;
             font-size: 0.75rem;
             letter-spacing: 0.05em;
-            text-align: center;
         }
 
         .data-table td {
@@ -124,6 +142,16 @@
             color: var(--secondary-700);
         }
 
+        .badge.bg-success-500 {
+            background-color: var(--success-100);
+            color: var(--success-500);
+        }
+
+        .badge.bg-warning-500 {
+            background-color: var(--warning-100);
+            color: var(--warning-500);
+        }
+
         .actions-cell {
             display: flex;
             gap: 0.5rem;
@@ -142,9 +170,6 @@
             transition: all 0.2s ease;
             text-decoration: none;
             white-space: nowrap;
-        }
-
-        .btn-icon {
             gap: 0.5rem;
         }
 
@@ -158,48 +183,33 @@
             background-color: var(--secondary-200);
             color: var(--secondary-800);
         }
-        .search-form {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
 
-        .status-filter {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--secondary-300);
-            border-radius: var(--radius-md);
-            background-color: white;
-            font-size: 0.875rem;
-            color: var(--secondary-700);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .status-filter:focus {
-            outline: none;
-            border-color: var(--primary-500);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-
-        .search-btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: var(--radius-md);
+        .btn-primary {
             background-color: var(--primary-600);
             color: white;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            border: 1px solid var(--primary-700);
         }
 
-        .search-btn:hover {
+        .btn-primary:hover {
             background-color: var(--primary-700);
         }
 
-        .search-btn i {
+        .action-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-600);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .action-link:hover {
+            color: var(--primary-800);
+            text-decoration: underline;
+        }
+
+        .action-link i {
             width: 16px;
             height: 16px;
         }
@@ -210,14 +220,14 @@
                 padding: 1rem;
             }
 
-            .table-responsive {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
             }
 
-            .actions-cell {
-                flex-direction: column;
-                gap: 0.25rem;
+            .header-actions {
+                width: 100%;
+                justify-content: flex-end;
             }
         }
     </style>
@@ -226,14 +236,12 @@
 <div layout:fragment="content">
     <div class="content-container">
         <div class="page-header">
-            <h2>Fournisseurs</h2>
-            <form th:action="@{/suppliers/name}" method="get" class="search-form">
-                <label for="name">Nom : </label>
-                <input type="text" name="name" id="name">
-                <button type="submit" class="search-btn">
-                    <i data-lucide="search"></i> Filtrer
-                </button>
-            </form>
+            <h2>Demandes de devis au fournisseur <span th:text="${supplierName}" class="text-primary-600"></span></h2>
+            <div class="header-actions">
+                <a th:href="@{/suppliers}" class="btn btn-secondary">
+                    <i data-lucide="arrow-left"></i> Retour aux fournisseurs
+                </a>
+            </div>
         </div>
 
         <div class="card table-card">
@@ -241,33 +249,20 @@
                 <table class="data-table">
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nom</th>
-                        <th>Type</th>
-                        <th>Pays</th>
+                        <th>Référence</th>
+                        <th>Date de transaction</th>
+                        <th>Fournisseur</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="supplier : ${suppliers}">
-                        <td th:text="${supplier.name}"></td>
-                        <td th:text="${supplier.supplier_name}"></td>
-                        <td>
-                            <span class="badge" th:text="${supplier.supplier_type}"></span>
-                        </td>
-                        <td th:text="${supplier.country}"></td>
+                    <tr th:each="quotation : ${quotations}">
+                        <td th:text="${quotation.name}"></td>
+                        <td th:text="${quotation.transaction_date}"></td>
+                        <td th:text="${quotation.supplier}"></td>
                         <td class="actions-cell">
-                            <a th:href="@{/quotations/rfqs/{id}(id=${supplier.name})}"
-                               class="btn btn-icon btn-secondary">
-                                <i data-lucide="file-text"></i> Demande devis
-                            </a>
-                            <a th:href="@{/quotations/{id}(id=${supplier.name})}"
-                               class="btn btn-icon btn-secondary">
-                                <i data-lucide="file-text"></i> Devis fournisseur
-                            </a>
-                            <a th:href="@{/purchaseorders/{id}(id=${supplier.name})}"
-                               class="btn btn-icon btn-secondary">
-                                <i data-lucide="shopping-cart"></i> Commandes
+                            <a th:href="@{item(rfq=${quotation.name},supplierName=${supplierName})}" class="action-link">
+                                <i data-lucide="file-text"></i> Détails
                             </a>
                         </td>
                     </tr>
