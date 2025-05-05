@@ -174,6 +174,12 @@
             width: 16px;
             height: 16px;
         }
+        .disabled-action {
+            color: var(--secondary-400) !important;
+            cursor: not-allowed;
+            pointer-events: none;
+            text-decoration: none;
+        }
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -228,13 +234,17 @@
                         <td th:text="${quotation.name}"></td>
                         <td th:text="${quotation.item_name}"></td>
                         <td th:text="${quotation.qty}"></td>
-                        <td th:text="${#numbers.formatDecimal(quotation.rate, 1, 2)} + ' €'"></td>
-                        <td th:text="${#numbers.formatDecimal(quotation.amount, 1, 2)} + ' €'"></td>
+                        <td th:text="${#numbers.formatDecimal(quotation.rate, 1, 'POINT', 2, 'COMMA')} + ' $'"></td>
+                        <td th:text="${#numbers.formatDecimal(quotation.amount, 1, 'POINT', 2, 'COMMA')} + ' $'"></td>
                         <td>
-                            <a th:href="@{/quotationItems/update(name=${quotation.name}, rate=${quotation.rate})}"
+                            <a th:if="${editable}"
+                               th:href="@{/quotationItems/update(name=${quotation.name}, rate=${quotation.rate})}"
                                class="action-link">
                                 <i data-lucide="edit"></i> Modifier
                             </a>
+                            <span th:unless="${editable}" class="action-link disabled-action">
+                                <i data-lucide="edit"></i> Modifier
+                            </span>
                         </td>
                     </tr>
                     </tbody>

@@ -33,7 +33,7 @@
             --success-100: #dcfce7;
             --warning-500: #f59e0b;
             --warning-100: #fef3c7;
-            --info-500: #3b82f6;
+            --info-500: #ecba2c;
             --info-100: #dbeafe;
             --error-500: #ef4444;
             --error-100: #fee2e2;
@@ -191,7 +191,7 @@
         }
 
         .status-partly-paid {
-            background-color: var(--info-100);
+            background-color: #e1e1ad;
             color: var(--info-500);
         }
 
@@ -300,11 +300,13 @@
                     <tr th:each="invoice : ${invoices}">
                         <td th:text="${invoice.name}"></td>
                         <td th:text="${invoice.due_date}"></td>
-                        <td th:text="${#numbers.formatDecimal(invoice.total, 1, 'POINT', 3, 'COMMA')} + ' $'"></td>
-                        <td th:text="${#numbers.formatDecimal(invoice.outstanding_amount, 1, 'POINT', 2, 'COMMA')} + ' $'"></td>
+                        <td th:text="${#numbers.formatDecimal(invoice.total, 1, 'POINT', 2, 'COMMA')}  + ' ' + ${invoice.currency}"></td>
+                        <td th:text="${#numbers.formatDecimal(invoice.outstanding_amount, 1, 'POINT', 2, 'COMMA')} + ' ' + ${invoice.currency}"></td>
                         <td>
-                            <span th:text="${invoice.status}"
-                                  th:classappend="${(invoice.status == 'Paid') ? 'status-paid badge' : (invoice.status == 'Partly Paid') ? 'status-partly-paid badge' : 'status-unpaid badge'}">
+                            <span th:switch="${invoice.status}">
+                                <span th:case="'Paid'" class="status-paid badge" th:text="${invoice.status}"></span>
+                                <span th:case="'Partly Paid'" class="status-partly-paid badge" th:text="${invoice.status}"></span>
+                                <span th:case="*" class="status-unpaid badge" th:text="${invoice.status}"></span>
                             </span>
                         </td>
                         <td th:text="${invoice.supplier}"></td>

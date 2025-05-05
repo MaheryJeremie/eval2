@@ -20,7 +20,7 @@ public class PurchaseInvoiceService {
         var response = apiService.get(
                 INVOICE_ENDPOINT,
                 Map.of(
-                        "fields", "[\"name\", \"due_date\",\"total\",\"outstanding_amount\", \"status\", \"supplier\", \"items.purchase_order\"]"
+                        "fields", "[\"name\", \"due_date\",\"total\",\"outstanding_amount\",\"currency\",\"status\", \"supplier\", \"items.purchase_order\"]"
                 )
         );
         return (List<Map<String, Object>>) response.getBody().get("data");
@@ -30,7 +30,7 @@ public class PurchaseInvoiceService {
         var response = apiService.get(
                 INVOICE_ENDPOINT,
                 Map.of(
-                        "fields", "[\"name\", \"due_date\", \"outstanding_amount\", \"status\", \"supplier\", \"items.purchase_order\"]",
+                        "fields", "[\"name\", \"due_date\",\"total\", \"outstanding_amount\",\"currency\", \"status\", \"supplier\", \"items.purchase_order\"]",
                         "filters", String.format("[[\"status\", \"=\", \"%s\"]]", status)
                 )
         );

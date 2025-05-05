@@ -75,6 +75,9 @@ public class FrappeService {
     }
 
     private boolean isAlreadyEncoded(String value) {
+        if (value.contains("%") && !value.matches(".*%[0-9A-Fa-f]{2}.*")) {
+            return true;
+        }
         try {
             String decoded = URLDecoder.decode(value, StandardCharsets.UTF_8.name());
             return decoded.equals(value);

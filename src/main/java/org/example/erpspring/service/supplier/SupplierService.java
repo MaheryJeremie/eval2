@@ -21,8 +21,17 @@ public class SupplierService {
         ResponseEntity<Map> response = apiService.get(
                 SUPPLIER_ENDPOINT,
                 Map.of(
+                        "fields", "[\"name\", \"supplier_name\", \"supplier_type\", \"country\"]"
+                )
+        );
+        return (List<Map<String, Object>>) response.getBody().get("data");
+    }
+    public List<Map<String, Object>> getAllSuppliersByName(String name) {
+        ResponseEntity<Map> response = apiService.get(
+                SUPPLIER_ENDPOINT,
+                Map.of(
                         "fields", "[\"name\", \"supplier_name\", \"supplier_type\", \"country\"]",
-                        "limit", "20"
+                        "filters", String.format("[[\"name\",\"like\",\"%s\"]]", "%" + name + "%")
                 )
         );
         return (List<Map<String, Object>>) response.getBody().get("data");
