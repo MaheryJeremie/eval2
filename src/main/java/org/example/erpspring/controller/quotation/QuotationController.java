@@ -71,6 +71,16 @@ public class QuotationController {
 
         return "redirect:/quotations/"+supplierName;
     }
+    @GetMapping("/sq/submit")
+    public String submitSupplierQuotation(@RequestParam String sqName,@RequestParam String supplierId){
+        try{
+            quotationService.submitSupplierQuotation(sqName);
+        }
+        catch (Exception e){
+            throw e;
+        }
+        return "redirect:/quotations/"+supplierId;
+    }
 
 }
 
