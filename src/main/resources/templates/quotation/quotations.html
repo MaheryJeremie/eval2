@@ -213,6 +213,12 @@
             width: 16px;
             height: 16px;
         }
+        .disabled-action {
+            color: var(--secondary-400) !important;
+            cursor: not-allowed;
+            pointer-events: none;
+            text-decoration: none;
+        }
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -267,10 +273,19 @@
                         <td th:text="${quotation.valid_till}"></td>
                         <td th:text="${#numbers.formatDecimal(quotation.grand_total, 1, 'POINT', 2, 'COMMA')} + ' $'"></td>
                         <td class="actions-cell">
+                            <span th:if="${quotation.status == 'Submitted'}" class="action-link disabled-action">
+                                <i data-lucide="check-circle"></i> Soumis
+                            </span>
+                            <a th:if="${quotation.status != 'Submitted'}"
+                               th:href="@{/quotations/sq/submit(sqName=${quotation.name},supplierId=${supplierName})}"
+                               class="action-link">
+                                <i data-lucide="check-circle"></i> Soumettre
+                            </a>
                             <a th:href="@{/quotations/item(name=${quotation.name},editable=${quotation.status != 'Submitted'})}" class="action-link">
                                 <i data-lucide="file-text"></i> Détails
                             </a>
                         </td>
+
                     </tr>
                     </tbody>
                 </table>

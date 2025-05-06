@@ -121,4 +121,26 @@ public class QuotationService {
 //        }
         return sqEntryName;
     }
+    public void submitSupplierQuotation(String sqEntryName){
+        ResponseEntity<Map> getResponse = apiService.get(
+                SUPPLIER_QUOTATION_ENDPOINT + "/" + sqEntryName,
+                null
+        );
+        if (getResponse.getBody() == null || !getResponse.getBody().containsKey("data")) {
+            throw new RuntimeException("Échec de récupération du Supplier Quotation : " + sqEntryName);
+        }
+        Map<String, Object> sqEntry = (Map<String, Object>) getResponse.getBody().get("data");
+        Map<String, Object> submitData = new HashMap<>();
+        submitData.put("doc", sqEntry);
+        ResponseEntity<Map> submitResponse = apiService.send(
+                SUBMIT_ENDPOINT,
+                submitData,
+                HttpMethod.POST
+        );
+
+        if (submitResponse.getStatusCode() != HttpStatus.OK) {
+            throw new RuntimeException("Échec de soumission du Supplier Quotation Entry : " + submitResponse.getBody());
+        }
+    }
+
 }
