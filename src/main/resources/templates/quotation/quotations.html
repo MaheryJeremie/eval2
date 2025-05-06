@@ -271,7 +271,7 @@
                             </span>
                         </td>
                         <td th:text="${quotation.valid_till}"></td>
-                        <td th:text="${#numbers.formatDecimal(quotation.grand_total, 1, 'POINT', 2, 'COMMA')} + ' $'"></td>
+                        <td th:text="${#numbers.formatDecimal(quotation.grand_total, 1, 'POINT', 2, 'COMMA')} + ' ' + ${quotation.currency}"></td>
                         <td class="actions-cell">
                             <span th:if="${quotation.status == 'Submitted'}" class="action-link disabled-action">
                                 <i data-lucide="check-circle"></i> Soumis
