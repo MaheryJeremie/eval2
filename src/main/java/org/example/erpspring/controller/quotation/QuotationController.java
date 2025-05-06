@@ -27,10 +27,12 @@ public class QuotationController {
         return "quotation/quotations";
     }
     @GetMapping("/item")
-    public String getQuotationitems(@RequestParam("name") String name,@RequestParam Boolean editable, Model model){
+    public String getQuotationitems(@RequestParam("name") String name,@RequestParam Boolean editable,@RequestParam String supplierId, Model model){
         List<Map<String,Object>> fournisseurStrig = quotationService.getQuotationItems(name);
         model.addAttribute("quotations",fournisseurStrig);
         model.addAttribute("editable",editable);
+        model.addAttribute("quotationName",name);
+        model.addAttribute("supplierId",supplierId);
         return "quotation/itemList";
     }
     @GetMapping("/rfqs/{supplierId}")

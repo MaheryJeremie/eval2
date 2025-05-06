@@ -280,11 +280,9 @@
 
   toggleBtn.addEventListener('click', () => {
     sidebar.classList.toggle('collapsed');
-    // On ne change plus l'icône car on veut toujours garder le burger
     lucide.createIcons();
   });
 
-  // Handle mobile menu
   function handleMobileMenu() {
     if (window.innerWidth <= 768) {
       sidebar.classList.remove('collapsed');
