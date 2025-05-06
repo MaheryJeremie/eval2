@@ -81,27 +81,27 @@
             overflow: hidden;
         }
 
-        .table-card {
+        .form-card {
             padding: 1.5rem;
         }
 
-        .table-responsive {
+        .form-responsive {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
 
-        .data-table {
+        .form-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.875rem;
         }
 
-        .data-table thead {
+        .form-table thead {
             background-color: var(--secondary-50);
             border-bottom: 1px solid var(--secondary-200);
         }
 
-        .data-table th {
+        .form-table th {
             padding: 1rem;
             text-align: left;
             color: var(--secondary-700);
@@ -111,18 +111,18 @@
             letter-spacing: 0.05em;
         }
 
-        .data-table td {
+        .form-table td {
             padding: 1rem;
             border-bottom: 1px solid var(--secondary-100);
             color: var(--secondary-800);
             vertical-align: middle;
         }
 
-        .data-table tr:last-child td {
+        .form-table tr:last-child td {
             border-bottom: none;
         }
 
-        .data-table tr:hover td {
+        .form-table tr:hover td {
             background-color: var(--secondary-50);
         }
 
@@ -142,6 +142,22 @@
             gap: 0.5rem;
         }
 
+        .btn-primary {
+            background-color: var(--primary-600);
+            color: white;
+            border: 1px solid var(--primary-700);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-700);
+        }
+
+        .btn-primary:disabled {
+            background-color: var(--secondary-300);
+            border-color: var(--secondary-400);
+            cursor: not-allowed;
+        }
+
         .btn-secondary {
             background-color: var(--secondary-100);
             color: var(--secondary-700);
@@ -153,32 +169,33 @@
             color: var(--secondary-800);
         }
 
-        .action-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--primary-600);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.5rem;
+        .input-field {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--secondary-300);
             border-radius: var(--radius-md);
-            transition: all 0.2s ease;
+            font-size: 0.875rem;
+            width: 100%;
+            max-width: 150px;
+            transition: border-color 0.2s ease;
         }
 
-        .action-link:hover {
-            background-color: var(--primary-50);
-            color: var(--primary-800);
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 2px var(--primary-100);
         }
 
-        .action-link i {
-            width: 16px;
-            height: 16px;
-        }
-        .disabled-action {
-            color: var(--secondary-400) !important;
+        .input-field:disabled {
+            background-color: var(--secondary-100);
+            color: var(--secondary-600);
             cursor: not-allowed;
-            pointer-events: none;
-            text-decoration: none;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+            gap: 0.75rem;
         }
 
         /* Responsive adjustments */
@@ -197,9 +214,13 @@
                 justify-content: flex-end;
             }
 
-            .data-table th,
-            .data-table td {
+            .form-table th,
+            .form-table td {
                 padding: 0.75rem 0.5rem;
+            }
+
+            .input-field {
+                max-width: 100%;
             }
         }
     </style>
@@ -208,7 +229,7 @@
 <div layout:fragment="content">
     <div class="content-container">
         <div class="page-header">
-            <h2>Produits du devis</h2>
+            <h2>Modification des prix unitaires des produits du devis reference  <span th:text="${quotationName}" class="text-primary-600"></span></h2></h2>
             <div class="header-actions">
                 <a th:href="@{/suppliers}" class="btn btn-secondary">
                     <i data-lucide="arrow-left"></i> Retour aux fournisseurs
@@ -216,17 +237,18 @@
             </div>
         </div>
 
-        <div class="card table-card">
-            <div class="table-responsive">
-                <table class="data-table">
+        <div class="card form-card">
+            <form th:action="@{/quotationItems/update}" method="post" class="form-responsive">
+                <input type="hidden" name="quotationName" th:value="${quotationName}">
+                <input type="hidden" name="supplierName" th:value="${supplierId}">
+                <table class="form-table">
                     <thead>
                     <tr>
                         <th>Référence</th>
                         <th>Article</th>
                         <th>Quantité</th>
-                        <th>Prix unitaire</th>
-                        <th>Montant</th>
-                        <th>Actions</th>
+                        <th>Prix unitaire (USD)</th>
+                        <th>Montant (USD)</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -234,22 +256,25 @@
                         <td th:text="${quotation.name}"></td>
                         <td th:text="${quotation.item_name}"></td>
                         <td th:text="${quotation.qty}"></td>
-                        <td th:text="${#numbers.formatDecimal(quotation.rate, 1, 'POINT', 2, 'COMMA')} + ' USD'"></td>
-                        <td th:text="${#numbers.formatDecimal(quotation.amount, 1, 'POINT', 2, 'COMMA')} + ' USD'"></td>
                         <td>
-                            <a th:if="${editable}"
-                               th:href="@{/quotationItems/update(name=${quotation.name}, rate=${quotation.rate})}"
-                               class="action-link">
-                                <i data-lucide="edit"></i> Modifier
-                            </a>
-                            <span th:unless="${editable}" class="action-link disabled-action">
-                                <i data-lucide="edit"></i> Modifier
-                            </span>
+                            <input type="number"
+                                   min="0"
+                                   th:value="${quotation.rate}"
+                                   th:name="'rate_' + ${quotation.name}"
+                                   class="input-field"
+                                   th:disabled="${!editable}">
                         </td>
+                        <td th:text="${#numbers.formatDecimal(quotation.amount, 1, 'POINT', 2, 'COMMA')}"></td>
                     </tr>
                     </tbody>
                 </table>
-            </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" th:disabled="${!editable}">
+                        <i data-lucide="save"></i> Enregistrer les modifications
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
