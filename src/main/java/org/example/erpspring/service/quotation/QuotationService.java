@@ -18,6 +18,7 @@ public class QuotationService {
     private static final String REQUEST_QUOTATION_ENDPOINT = "/resource/Request for Quotation";
     private static final String SUPPLIER_QUOTATION_ENDPOINT = "/resource/Supplier Quotation";
     private static final String SUBMIT_ENDPOINT = "/method/frappe.client.submit";
+    private static final String CUSTOM_ENDPOINT = "/method/erpnext.api.customRequest.get_rfq_for_supplier";
 
     private final FrappeService apiService;
 
@@ -45,20 +46,14 @@ public class QuotationService {
         return (List<Map<String, Object>>) data.get("items");
     }
 
-    public List<Map<String, Object>> getAllRequestQuotations() {
+    public List<Map<String, Object>> getRFQsBySupplier(String supplierName) {
         var response = apiService.get(
-                REQUEST_QUOTATION_ENDPOINT,
+                CUSTOM_ENDPOINT,
                 Map.of(
-                        "fields", "[\"name\",\"transaction_date\",\"suppliers.supplier\"]"
+                        "supplier", supplierName
                 )
         );
-        return (List<Map<String, Object>>) response.getBody().get("data");
-    }
-    public List<Map<String, Object>> getRFQsBySupplier(String supplierName) {
-        List<Map<String, Object>> allRfqs = getAllRequestQuotations();
-        return allRfqs.stream()
-                .filter(rfq -> supplierName.equals(rfq.get("supplier")))
-                .collect(Collectors.toList());
+        return (List<Map<String, Object>>) response.getBody().get("message");
     }
     public List<Map<String, Object>> getRfqItems(String name) {
         var response = apiService.get(
