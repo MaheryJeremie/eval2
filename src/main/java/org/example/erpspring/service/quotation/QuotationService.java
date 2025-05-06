@@ -30,7 +30,7 @@ public class QuotationService {
         var response = apiService.get(
                 SUPPLIER_QUOTATION_ENDPOINT,
                 Map.of(
-                        "fields", "[\"name\", \"status\", \"valid_till\", \"grand_total\"]",
+                        "fields", "[\"name\", \"status\", \"valid_till\", \"grand_total\",\"currency\"]",
                         "filters", "[[\"supplier\", \"=\", \"" + supplierId + "\"]]",
                         "order_by", "creation desc"
                 )

@@ -234,8 +234,8 @@
                         <td th:text="${quotation.name}"></td>
                         <td th:text="${quotation.item_name}"></td>
                         <td th:text="${quotation.qty}"></td>
-                        <td th:text="${#numbers.formatDecimal(quotation.rate, 1, 'POINT', 2, 'COMMA')} + ' $'"></td>
-                        <td th:text="${#numbers.formatDecimal(quotation.amount, 1, 'POINT', 2, 'COMMA')} + ' $'"></td>
+                        <td th:text="${#numbers.formatDecimal(quotation.rate, 1, 'POINT', 2, 'COMMA')} + ' USD'"></td>
+                        <td th:text="${#numbers.formatDecimal(quotation.amount, 1, 'POINT', 2, 'COMMA')} + ' USD'"></td>
                         <td>
                             <a th:if="${editable}"
                                th:href="@{/quotationItems/update(name=${quotation.name}, rate=${quotation.rate})}"
